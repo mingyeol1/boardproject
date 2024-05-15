@@ -52,7 +52,18 @@
                     </div>
 
 
+
+
                 </div> <!--end card-body -->
+
+                <div class="col">
+                    <div class="card" th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
+                        <img class="card-img-top"
+                             th:each="fileName: ${dto.fileNames}"
+                             th:src="|/view/${fileName}|">
+                    </div>
+
+
             </div><!--end card -->
         </div> <!--end col -->
     </div><!--end row -->
@@ -128,7 +139,7 @@
     <!-- reply를 처리하기 위한 javascript 라이브러리 불러오기...  -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/js/reply.js"></script>
-
+    </div>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
@@ -352,4 +363,4 @@
 
 </script>
 
-</html>
+

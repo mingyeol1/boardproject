@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.b01.dto.BoardDTO;
-import org.zerock.b01.dto.BoardListReplyCountDTO;
-import org.zerock.b01.dto.PageRequestDTO;
-import org.zerock.b01.dto.PageResponseDTO;
+import org.zerock.b01.dto.*;
 import org.zerock.b01.service.BoardService;
 
 @Controller
@@ -28,7 +25,7 @@ public class BoardController {
     @GetMapping("/list")
     public void setLog(PageRequestDTO pageRequestDTO, Model model) {
 //        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
-        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+        PageResponseDTO<BoardListAllDTO> responseDTO = boardService.listWithAll(pageRequestDTO);
         log.info(responseDTO);
 
         model.addAttribute("responseDTO", responseDTO);
@@ -39,23 +36,22 @@ public class BoardController {
     public void registerGet(){
 
     }
-    @PostMapping("/register") //등록 입력.
-    public String registerPost(@Valid BoardDTO boardDTO, //값이 들어가 있는지 검증.
-                               BindingResult bindingResult, //오류 출력
-                                RedirectAttributes redirectAttributes){
+    @PostMapping("/register")
+    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
 
-        log.info("board Post register........");
-        if(bindingResult.hasErrors()){ //에러가 발생시 출력
-            log.info("has errors");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/board/register"; //에러가 발생하면 이쪽으로 리턴.
+        log.info("board POST register.......");
+
+        if(bindingResult.hasErrors()) {
+            log.info("has errors.......");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+            return "redirect:/board/register";
         }
 
-        // 등록작업
         log.info(boardDTO);
 
-        Long bno = boardService.register(boardDTO);
-        redirectAttributes.addFlashAttribute("result", bno); //화면에만 보이고
+        Long bno  = boardService.register(boardDTO);
+
+        redirectAttributes.addFlashAttribute("result", bno);
 
         return "redirect:/board/list";
     }
