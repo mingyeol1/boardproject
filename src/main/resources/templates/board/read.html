@@ -23,10 +23,18 @@
                         <span class="input-group-text">Title</span>
                         <input type="text" class="form-control" th:value="${dto.title}" readonly>
                     </div>
+
+                    <div class="card" th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
+                        <img class="card-img-top"
+                             th:each="fileName: ${dto.fileNames}"
+                             th:src="|/view/${fileName}|">
+                    </div>
+
                     <div class="input-group mb-3">
                         <span class="input-group-text">Content</span>
                         <textarea class="form-control col-sm-5" rows="5" readonly>[[${dto.content}]]</textarea>
                     </div>
+
                     <div class="input-group mb-3">
                         <span class="input-group-text">Writer</span>
                         <input type="text" class="form-control" th:value="${dto.writer}" readonly>
@@ -56,12 +64,8 @@
 
                 </div> <!--end card-body -->
 
-                <div class="col">
-                    <div class="card" th:if="${dto.fileNames != null && dto.fileNames.size() > 0}">
-                        <img class="card-img-top"
-                             th:each="fileName: ${dto.fileNames}"
-                             th:src="|/view/${fileName}|">
-                    </div>
+
+
 
 
             </div><!--end card -->
@@ -140,7 +144,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/js/reply.js"></script>
     </div>
-</div>
+
 
 <script layout:fragment="script" th:inline="javascript">
 

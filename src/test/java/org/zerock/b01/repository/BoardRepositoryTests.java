@@ -344,7 +344,7 @@ public class BoardRepositoryTests {
                     log.info(boardImageDTO);
                 }
             }
-            log.info("=================================");
+            log.info("=================================git");
 
         });
     }
