@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 public interface BoardService {
 
+
+
     Long register(BoardDTO boardDTO); //퍼블릭 파이널은 생략이 가능하다.
 
     BoardDTO readOne(Long bno);

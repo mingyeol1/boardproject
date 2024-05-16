@@ -32,4 +32,9 @@ public class Reply extends BaseEntity{
     public void setBoard(Long bno){
         this.board = Board.builder().bno(bno).build();
     }
+    public void changeBoard(Board board){
+        this.board = board;
+    }
+
+
 }

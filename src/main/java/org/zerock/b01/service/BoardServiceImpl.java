@@ -1,15 +1,18 @@
 package org.zerock.b01.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.b01.domain.Board;
 import org.zerock.b01.dto.*;
 import org.zerock.b01.repository.BoardRepository;
+import org.zerock.b01.repository.ReplyRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,8 @@ public class BoardServiceImpl implements BoardService {
     private final ModelMapper modelMapper; //생성자 주입.
 
     private final BoardRepository boardRepository; //생성자 주입.
+
+
 
     @Override //구현
     public Long register(BoardDTO boardDTO) {
