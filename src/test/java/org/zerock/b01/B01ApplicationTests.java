@@ -10,6 +10,9 @@ class B01ApplicationTests {
     void contextLoads() {
     }
 
+    public void test(){
+
+    }
 
 
 }

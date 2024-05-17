@@ -27,4 +27,8 @@ public class DataSourceTests {
 
         Assertions.assertNotNull(conn);
     }
+    @Test
+    public void test(){
+
+    }
 }
