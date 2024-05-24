@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.b01.dto.*;
 import org.zerock.b01.service.BoardService;
@@ -45,23 +44,24 @@ public class BoardController {
 
     @PreAuthorize("hasRole('USER')")//사전인가. //인가처리 //ROLE_USER와 같은 의미로 특정 권한 사용자만 권한 접근 가능하도록 설정
     @GetMapping("/register")
-    public void registerGet(){
+    public void registerGet() {
 
     }
+
     @PostMapping("/register")
-    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         log.info("board POST register.......");
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("has errors.......");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/board/register";
         }
 
         log.info(boardDTO);
 
-        Long bno  = boardService.register(boardDTO);
+        Long bno = boardService.register(boardDTO);
 
         redirectAttributes.addFlashAttribute("result", bno);
 
@@ -83,15 +83,15 @@ public class BoardController {
     public String modify(PageRequestDTO pageRequestDTO,
                          @Valid BoardDTO boardDTO,
                          BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes){
-        log.info("board Modify post......"+ boardDTO);
-        if(bindingResult.hasErrors()){
+                         RedirectAttributes redirectAttributes) {
+        log.info("board Modify post......" + boardDTO);
+        if (bindingResult.hasErrors()) {
             log.info("has errors"); //오류시에 나오는 문구 출력
 
             String link = pageRequestDTO.getLink();
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             redirectAttributes.addAttribute("bno", boardDTO.getBno());
-            return "redirect:/board/modify?"+link;
+            return "redirect:/board/modify?" + link;
         }
 
         boardService.modify(boardDTO);
@@ -103,9 +103,9 @@ public class BoardController {
 
     @PreAuthorize("principal.username == #boardDTO.writer")//사전인가. //인가처리 //ROLE_USER와 같은 의미로 특정 권한 사용자만 권한 접근 가능하도록 설정
     @PostMapping("/remove")
-    public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes){
+    public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
         log.info("REMOVE----------------------------------------------");
-        log.info("bno : "+ boardDTO.getBno());
+        log.info("bno : " + boardDTO.getBno());
 
 
         boardService.remove(boardDTO.getBno());
@@ -113,20 +113,19 @@ public class BoardController {
         //게시물이 삭제되었다면 첨부 파일 삭제
         log.info(boardDTO.getFileNames());
         List<String> fileNames = boardDTO.getFileNames();
-        if(fileNames != null && fileNames.size() > 0){
+        if (fileNames != null && fileNames.size() > 0) {
             removeFiles(fileNames);
         }
 
-        redirectAttributes.addFlashAttribute("result","removed");
+        redirectAttributes.addFlashAttribute("result", "removed");
 
         return "redirect:/board/list";
     }
 
 
+    public void removeFiles(List<String> files) {
 
-    public void removeFiles(List<String> files){
-
-        for (String fileName:files) {
+        for (String fileName : files) {
 
             Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
             String resourceName = resource.getFilename();
@@ -151,15 +150,15 @@ public class BoardController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/like")
-    public String likeBoard(@RequestParam("bno") Long bno, @RequestParam("memberId") String memberId, RedirectAttributes redirectAttributes) {
+    public String likeBoard(@RequestParam("bno") Long bno, @RequestParam("memberId") String member_mid, RedirectAttributes redirectAttributes) {
         BoardLikeDTO boardLikeDTO = new BoardLikeDTO();
         boardLikeDTO.setBoard_bno(bno);
-        boardLikeDTO.setMember_mid(memberId);
+        boardLikeDTO.setMember_mid(member_mid);
 
         boardService.likeBoard(boardLikeDTO);
 
         redirectAttributes.addAttribute("bno", bno);
         return "redirect:/board/read";
-    }
 
+    }
 }
