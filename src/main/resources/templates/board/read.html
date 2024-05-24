@@ -39,6 +39,17 @@
                         <span class="input-group-text">Writer</span>
                         <input type="text" class="form-control" th:value="${dto.writer}" readonly>
                     </div>
+
+                    <form th:action="@{/board/like}" method="post">
+                        <input type="hidden" name="bno" th:value="${dto.bno}" />
+                        <input type="hidden" name="memberId" th:value="${#authentication.principal.username}" />
+                        <button type="submit">Like</button>
+                    </form>
+
+                    <div>
+                        Likes: <span th:text="${#vars.likes}"></span>
+                    </div>
+
                     <div class="input-group mb-3">
                         <span class="input-group-text">RegDate</span>
                         <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm:ss')}" readonly>

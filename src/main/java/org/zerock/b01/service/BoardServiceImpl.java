@@ -10,8 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.b01.domain.Board;
+import org.zerock.b01.domain.BoardLike;
+import org.zerock.b01.domain.Member;
 import org.zerock.b01.dto.*;
+import org.zerock.b01.repository.BoardLikeRepository;
 import org.zerock.b01.repository.BoardRepository;
+import org.zerock.b01.repository.MemberRepository;
 import org.zerock.b01.repository.ReplyRepository;
 
 import java.util.List;
@@ -27,6 +31,9 @@ public class BoardServiceImpl implements BoardService {
     private final ModelMapper modelMapper; //생성자 주입.
 
     private final BoardRepository boardRepository; //생성자 주입.
+
+    private final BoardLikeRepository boardLikeRepository;
+    private final MemberRepository memberRepository;
 
 
 
@@ -134,5 +141,23 @@ public class BoardServiceImpl implements BoardService {
                 .dtoList(result.getContent())
                 .total((int)result.getTotalElements())
                 .build();
+    }
+
+    public void likeBoard(BoardLikeDTO boardLikeDTO) {
+        Board board = boardRepository.findById(boardLikeDTO.getBoard_bno()).orElseThrow(() -> new IllegalArgumentException("Invalid board ID"));
+        Member member = memberRepository.findById(boardLikeDTO.getMember_mid()).orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+
+        Optional<BoardLike> existingLike = boardLikeRepository.findByBoardAndMember(board, member);
+        if (existingLike.isPresent()) {
+            boardLikeRepository.delete(existingLike.get());
+        } else {
+            BoardLike boardLike = BoardLike.builder().board(board).member(member).build();
+            boardLikeRepository.save(boardLike);
+        }
+    }
+
+    public int countLikes(Long boardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("Invalid board ID"));
+        return boardLikeRepository.countByBoard(board);
     }
 }

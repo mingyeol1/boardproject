@@ -67,5 +67,9 @@ public interface BoardService {
         return boardDTO;
     }
 
+    void likeBoard(BoardLikeDTO boardLikeDTO);
+
+    int countLikes(Long boardId);
+
 }
 

@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.b01.dto.*;
 import org.zerock.b01.service.BoardService;
@@ -67,11 +69,13 @@ public class BoardController {
     }
 
     @PreAuthorize("isAuthenticated()") //인증된 사용자만 접근 가능.
-    @GetMapping({"/read", "/modify"})//조회기능
+    @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
         BoardDTO boardDTO = boardService.readOne(bno);
         log.info(boardDTO);
-        model.addAttribute("dto",boardDTO);
+        int likes = boardService.countLikes(bno);
+        model.addAttribute("dto", boardDTO);
+        model.addAttribute("likes", likes);
     }
 
     @PreAuthorize("principal.username == #boardDTO.writer")  //수정 처리는 게시물 작성자와 로그인한 사용자가 같은 경우
@@ -143,6 +147,19 @@ public class BoardController {
             }
 
         }//end for
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/like")
+    public String likeBoard(@RequestParam("bno") Long bno, @RequestParam("memberId") String memberId, RedirectAttributes redirectAttributes) {
+        BoardLikeDTO boardLikeDTO = new BoardLikeDTO();
+        boardLikeDTO.setBoard_bno(bno);
+        boardLikeDTO.setMember_mid(memberId);
+
+        boardService.likeBoard(boardLikeDTO);
+
+        redirectAttributes.addAttribute("bno", bno);
+        return "redirect:/board/read";
     }
 
 }
