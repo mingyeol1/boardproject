@@ -41,7 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
        Member member = result.get();
 
-        //UserDetails 개겣로 반환하는 userDetails를 생성..
+        //UserDetails 객체로 반환하는 userDetails를 생성..
         MemberSecurityDTO memberSecurityDTO = new MemberSecurityDTO(
                 member.getMid(),
                 member.getMpw(),
