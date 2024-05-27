@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.b01.dto.*;
 import org.zerock.b01.service.BoardService;
@@ -27,7 +28,7 @@ import java.util.List;
 @RequestMapping("/board") // /board를 써야만 들어 올 수 있음
 public class BoardController {
 
-    @Value("${org.zerock.upload.path}")// import 시에 springframework으로 시작하는 Value
+    @Value("${org.zerock.upload.path}")// import 시에 springframework으로 시작하는 Value111111
     private String uploadPath;
 
     private final BoardService boardService; //싱글톤
@@ -55,6 +56,7 @@ public class BoardController {
         if (bindingResult.hasErrors()) {
             log.info("has errors.......");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+
             return "redirect:/board/register";
         }
 
@@ -63,6 +65,7 @@ public class BoardController {
         Long bno = boardService.register(boardDTO);
 
         redirectAttributes.addFlashAttribute("result", bno);
+        redirectAttributes.addFlashAttribute("result", "register");
 
         return "redirect:/board/list";
     }
